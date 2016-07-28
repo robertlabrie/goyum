@@ -83,6 +83,10 @@ func GetPackageInfo(path string) (yumpackage YumPackage) {
 
 func GetPackageDirs() (dirs []string) {
 	dirs = []string{}
+
+	if _, err := os.Stat(DBPath); os.IsNotExist(err) {
+		return
+	}
 	err := filepath.Walk(DBPath, func(path string, f os.FileInfo, err error) error {
 		if f.IsDir() && len(path)-len(DBPath) > 3 {
 			dirs = append(dirs, path)

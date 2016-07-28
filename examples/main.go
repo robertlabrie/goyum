@@ -8,6 +8,7 @@ import (
 
 func main() {
 	goyum.DBPath = "/Users/robertlabrie/tmp/yum/yumdb"
+	goyum.DBPath = "/fake"
 	fmt.Println("bubbles")
 	bont := goyum.GetPackages()
 	fmt.Printf("%+v", bont)
