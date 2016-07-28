@@ -2,6 +2,7 @@ package goyum
 
 import (
 	"bufio"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -14,7 +15,8 @@ type YumPackage struct {
 	Reason        string
 	Releasever    string
 	RepoTimeStamp string
-	InstalledOn   string
+	InstalledOn   int64
+	CommandLine   string
 }
 
 var YumPath = "/var/lib/yum"
@@ -22,6 +24,51 @@ var DBPath = "/var/lib/yum/yumdb"
 
 func GetPackageInfo(path string) (yumpackage YumPackage) {
 
+	var data []byte
+	var err error
+	users := GetUsers()
+	// extract the package name from the path -- this method sucks -- use RegEx
+	name := path
+	bits := strings.Split(name, "-")
+	name = strings.Replace(name, bits[0]+"-", "", 1)
+	yumpackage.Name = name
+
+	//Linux doesn't have btime, so we use the mtime of from installed_by
+	info, err := os.Stat(path + "/installed_by")
+	yumpackage.InstalledOn = info.ModTime().Unix()
+
+	// get installed by
+	data, err = ioutil.ReadFile(path + "/installed_by")
+	yumpackage.InstalledBy = string(data)
+
+	// check if we had a user name for it
+	if val, exists := users[yumpackage.InstalledBy]; exists {
+		yumpackage.InstalledBy = val
+	}
+
+	//repo
+	data, err = ioutil.ReadFile(path + "/from_repo")
+	yumpackage.Repo = string(data)
+
+	//reason
+	data, err = ioutil.ReadFile(path + "/reason")
+	yumpackage.Reason = string(data)
+
+	//commandline
+	data, err = ioutil.ReadFile(path + "/command_line")
+	yumpackage.CommandLine = string(data)
+
+	//releasever
+	data, err = ioutil.ReadFile(path + "/releasever")
+	yumpackage.Releasever = string(data)
+
+	//from_repo_timestamp
+	data, err = ioutil.ReadFile(path + "/from_repo_timestamp")
+	yumpackage.RepoTimeStamp = string(data)
+
+	if err != nil {
+		return
+	}
 	return
 }
 
@@ -53,7 +100,7 @@ func Foo() (out string) {
 
 func GetUsers() (users map[string]string) {
 	users = make(map[string]string)
-	//users[0] = "root"
+
 	file, err := os.Open("/etc/passwd")
 	if err != nil {
 		return
