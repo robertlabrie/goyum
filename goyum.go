@@ -22,6 +22,15 @@ type YumPackage struct {
 var YumPath = "/var/lib/yum"
 var DBPath = "/var/lib/yum/yumdb"
 
+func ListInstalled() (installed []YumPackage) {
+	dirs := GetPackageDirs()
+	for _, d := range dirs {
+		p := GetPackageInfo(d)
+		installed = append(installed, p)
+	}
+	return
+}
+
 func GetPackageInfo(path string) (yumpackage YumPackage) {
 
 	var data []byte

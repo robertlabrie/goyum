@@ -21,4 +21,7 @@ func main() {
 
 	p := goyum.GetPackageInfo("/Users/robertlabrie/tmp/yum/yumdb/z/b72c0834bd1cdf15d2486e8415ec61edf7c8086c-zlib-1.2.3-29.el6-x86_64")
 	fmt.Printf("%+v", p)
+
+	pkgs := goyum.ListInstalled()
+	fmt.Printf("%+v", pkgs)
 }
