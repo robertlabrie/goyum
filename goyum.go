@@ -43,7 +43,8 @@ func GetPackageInfo(path string) (yumpackage YumPackage) {
 	yumpackage.Name = name
 
 	//Linux doesn't have btime, so we use the mtime of from installed_by
-	info, err := os.Stat(path + "/installed_by")
+	// info, err := os.Stat(path + "/installed_by")
+	info, err := os.Stat(path)
 	yumpackage.InstalledOn = info.ModTime().Unix()
 
 	// get installed by
