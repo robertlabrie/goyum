@@ -99,18 +99,6 @@ func GetPackageDirs() (dirs []string) {
 	}
 	return
 }
-func GetPackages() (packages []YumPackage) {
-
-	var p YumPackage
-
-	packages = append(packages, p)
-
-	return
-}
-
-func Foo() (out string) {
-	return "bar"
-}
 
 func GetUsers() (users map[string]string) {
 	users = make(map[string]string)

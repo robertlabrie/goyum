@@ -10,8 +10,6 @@ func main() {
 	goyum.DBPath = "/Users/robertlabrie/tmp/yum/yumdb"
 	goyum.DBPath = "/fake"
 	fmt.Println("bubbles")
-	bont := goyum.GetPackages()
-	fmt.Printf("%+v", bont)
 
 	var users map[string]string
 	users = goyum.GetUsers()
